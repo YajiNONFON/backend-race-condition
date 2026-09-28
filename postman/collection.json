@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "Race condition module",
+    "description": "Import this file directly in Postman (Import button). Run 'Seed account' first, it auto-fills the accountId variable used by every other request.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "accountId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Race condition",
+      "item": [
+        {
+          "name": "Seed account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body && body.id) {",
+                  "  pm.collectionVariables.set('accountId', body.id);",
+                  "  console.log('accountId saved:', body.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/concepts/race-condition/seed",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ownerName\": \"Test\",\n  \"balance\": 10000\n}"
+            }
+          }
+        },
+        {
+          "name": "Get account",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/concepts/race-condition/accounts/{{accountId}}"
+          }
+        },
+        {
+          "name": "Bad withdraw",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/concepts/race-condition/bad/withdraw",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"amount\": 3000\n}"
+            }
+          }
+        },
+        {
+          "name": "Good withdraw",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/concepts/race-condition/good/withdraw",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"amount\": 3000\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

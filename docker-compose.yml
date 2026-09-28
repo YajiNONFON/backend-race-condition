@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: race-condition-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: concepts
+      POSTGRES_PASSWORD: concepts
+      POSTGRES_DB: race_condition
+    ports:
+      - "5432:5432"
+    volumes:
+      - race_condition_pgdata:/var/lib/postgresql/data
+
+volumes:
+  race_condition_pgdata:

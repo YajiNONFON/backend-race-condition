@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+generated/
+
+# Personal study notes (French) - not meant for the public GitHub repo.
+# Keep these locally for your own learning, they stay out of version control.
+cours.md
+explication.md
+projet-exemple.md

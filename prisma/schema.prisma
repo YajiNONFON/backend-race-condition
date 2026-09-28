@@ -1,0 +1,27 @@
+// Schema shared across every module in this lab.
+// Each concept that needs persistence adds its own tables here,
+// with a comment stating which module owns them.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Used by module: race-condition
+// Represents an account (e.g. a simplified Mobile Money wallet).
+// "balance" is stored as an Int (cents) to avoid floating point
+// rounding issues on money.
+model Account {
+  id        String   @id @default(uuid())
+  ownerName String
+  balance   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("accounts")
+}
